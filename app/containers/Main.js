@@ -18,7 +18,6 @@ import {
 } from 'react-native';
 
 import DeviceInfo from 'react-native-device-info';
-import AV from 'leancloud-storage';
 import SplashScreen from 'rn-splash-screen';
 
 import {
@@ -39,7 +38,6 @@ import {
 } from '../utils';
 
 const formatTime = Timer.formatTime;
-const Score = AV.Object.extend('Score');
 
 function getStartOfWeek() {
   const date = new Date();
@@ -289,7 +287,6 @@ class Main extends Component {
       return;
     }
     this.score.time = new Date();
-    this.uploadScore(this.score);
     const newRecord = this.scores.length > 0 && elapsed < this.scores[0].elapsed;
     if (newRecord) this.records = [];
     setTimeout(() => {
@@ -415,40 +412,6 @@ class Main extends Component {
     });
   }
 
-  uploadScore = async(_score) => {
-    const sid = _score.puzzle.map(x => x == null ? 0 : x + 1).join('');
-    let query = new AV.Query('Score');
-    query.equalTo('sid', sid);
-    query.ascending('elapsed');
-    let score = await query.first();
-    if (!score || score.get('elapsed') > _score.elapsed) {
-      if (!score) {
-        score = new Score();
-      } else {
-        const played = score.get('played') + 1;
-        score = AV.Object.createWithoutData('Score', score.id);
-        score.set('played', played);
-      }
-      score.set('elapsed', _score.elapsed);
-      score.set('sid', sid);
-      score.set('puzzle', _score.puzzle);
-      score.set('solve', _score.solve);
-      score.set('steps', _score.steps);
-      score.set('errors', _score.errors);
-      score.set('time', new Date(_score.time));
-      score.set('uid', DeviceInfo.getUniqueID());
-      score.set('model', DeviceInfo.getModel());
-      score.set('device', DeviceInfo.getDeviceName());
-    } else {
-      const played = score.get('played') + 1;
-      score = AV.Object.createWithoutData('Score', score.id);
-      score.set('played', played);
-    }
-
-    const result = await score.save();
-    return result;
-  }
-
   onToggleOnline = async() => {
     if (!this.state.showOnline) {
       try {
@@ -461,43 +424,19 @@ class Main extends Component {
         });
         const best = this.scores[0];
         const sid = best.puzzle.map(x => x == null ? 0 : x + 1).join('');
-        let query = new AV.Query('Score');
-        query.equalTo('sid', sid);
-        query.ascending('elapsed');
-        let score = await query.first();
-        if (!score || score.get('elapsed') > best.elapsed) {
-          const result = await this.uploadScore(best);
-          if (!result || !result.id) {
-            this.setState({
-              fetching: false,
-            });
-            Alert.alert(I18n.t('error'), I18n.t('uploaderror'), [
-              { text: I18n.t('ok') },
-            ]);
-            return;
-          }
-          this.records == [];
-        }
-        if (this.records.length == 0) {
-          query = new AV.Query('Score');
-          query.ascending('elapsed');
-          query.greaterThan('time', getStartOfWeek());
-          query.limit(10);
-          this.records = await query.find();
-        }
-        query = new AV.Query('Score');
-        query.greaterThan('time', getStartOfWeek());
-        query.lessThan('elapsed', best.elapsed);
-        this.rank = await query.count();
+        this.setState({
+          fetching: false,
+        });
+        this.records == [];
+        Alert.alert(I18n.t('error'), I18n.t('uploaderror'), [
+          { text: I18n.t('ok') },
+        ]);
+        this.rank = this.rank + 1;
         this.ranks = this.records.map(x => x.get('elapsed'));
         if (this.rank < 10 && !this.ranks.includes(best.elapsed)) {
           this.ranks.splice(this.rank, 0, best.elapsed);
           this.ranks.pop();
         }
-        this.rank = this.rank + 1;
-        this.setState({
-          fetching: false,
-        });
       } catch (e) {
         this.setState({
           fetching: false,
@@ -544,7 +483,7 @@ class Main extends Component {
   }
 
   onShare = () => {
-    const url = 'http://a.app.qq.com/o/simple.jsp?pkgname=com.liteneo.sudoku';
+    const url = 'http://google.com/';
     let message = I18n.t('sharemessage');
     if (Platform.OS == 'android') message = message + ' \n' + url;
     Share.share({
@@ -561,9 +500,7 @@ class Main extends Component {
   }
 
   onRate = () => {
-    const link = Platform.OS == 'android' ?
-      'market://details?id=com.liteneo.sudoku' :
-      'itms-apps://itunes.apple.com/cn/app/id1138612488?mt=8';
+    const link = 'http://google.com/'
     Alert.alert(I18n.t('rate'), I18n.t('ratemessage'), [
       { text: I18n.t('confirm'), onPress: () => Linking.openURL(link) },
       { text: I18n.t('cancel') },
@@ -674,11 +611,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: CellSize * 3 / 4,
     fontFamily: 'Menlo',
-    ...(I18n.locale.startsWith('en') && Platform.select({
-      android: {
-        width: CellSize * 5,
-      },
-    })),
+    width: CellSize * 5,
   },
   challenge: {
     flex: 1,
