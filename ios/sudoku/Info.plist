@@ -15,29 +15,27 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.4.0</string>
+	<string>1.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>8</string>
+	<string>15</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>alipayqr</string>
+	</array>
 	<key>LSHasLocalizedDisplayName</key>
 	<true/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LeanCloudAppId</key>
-	<string>your leancloud appId</string>
+	<string>gVk8jt4UgJhs9Lb8wyH2fHHk-gzGzoHsz</string>
 	<key>LeanCloudAppKey</key>
-	<string>your leancloud appKey</string>
+	<string>XkusJpvkcRSc6w1cNBghqEbW</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>

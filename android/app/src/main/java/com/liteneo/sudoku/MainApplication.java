@@ -31,7 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
           new ReactNativeI18n(),
           new RNDeviceInfo(),
-          new RNLeanCloudPackage("your leancloud appId", "your leancloud appKey"),
+          new RNLeanCloudPackage("gVk8jt4UgJhs9Lb8wyH2fHHk-gzGzoHsz", "XkusJpvkcRSc6w1cNBghqEbW"),
           new SplashScreenPackage()
       );
     }

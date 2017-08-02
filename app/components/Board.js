@@ -122,13 +122,13 @@ class Board extends Component {
       nextPuzzle[index] = number;
       if (!sudoku.solvepuzzle(nextPuzzle)) {
         stack.moveBack(() => {
-          this.props.onErrorMove && this.props.onErrorMove();
+          this.props.onErrorMove && this.props.onErrorMove(index, number);
         });
         return;
       }
+      this.props.onMove && this.props.onMove(index, number);
       this.movedStacks[number]++;
       this.cells[index].setNumber(number);
-      this.props.onMove && this.props.onMove();
       stack.setHide(true);
       this.puzzle[index] = number;
       if (this.puzzle.filter((item, idx) => item != null && toZ(idx) == z).length == 9) {
@@ -281,7 +281,7 @@ class Board extends Component {
 
 const styles = StyleSheet.create({
   boardContainer: {
-    marginTop: 20,
+    //marginTop: 20,
     alignItems: 'center',
     width: BoardWidth,
   },
