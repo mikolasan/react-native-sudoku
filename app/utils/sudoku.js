@@ -7,10 +7,16 @@
 var undefined;
 var _ = require('lodash');
 
+const factor = 3;
+const side = factor * factor;
+const block = side * factor;
+const space = side * side;
+const oneBits = (1 << side) - 1;
+
 function makepuzzle(board) {
 	var puzzle  = [];
-	var deduced = makeArray(81, null);
-	var order   = _.range(81);
+	var deduced = makeArray(space, null);
+	var order   = _.range(space);
 
 	shuffleArray(order);
 
@@ -132,7 +138,7 @@ function deduce(board) {
 	    var allowed = tuple1.allowed;
 	    var needed  = tuple1.needed;
 
-	    for (var pos = 0; pos < 81; pos++) {
+	    for (var pos = 0; pos < space; pos++) {
 	    	if (board[pos] == null) {
 	    		var numbers = listbits(allowed[pos]);
 	    		if (numbers.length == 0) {
@@ -161,16 +167,16 @@ function deduce(board) {
 	    }
 
     	// fill in any spots determined by elimination of other locations
-    	for (var axis = 0; axis < 3; axis++) {
-	    	for (var x = 0; x < 9; x++) {
-        		var numbers = listbits(needed[axis * 9 + x]);
+    	for (var axis = 0; axis < factor; axis++) {
+	    	for (var x = 0; x < side; x++) {
+        		var numbers = listbits(needed[axis * side + x]);
 
 		    	for (var i = 0; i < numbers.length; i++) {
 		    		var n     = numbers[i];
 		            var bit   = 1 << n;
           			var spots = [];
 
-			    	for (var y = 0; y < 9; y++) {
+			    	for (var y = 0; y < side; y++) {
 			    		var pos = posfor(x, y, axis);
 			    		if (allowed[pos] & bit) {
 				    		spots.push(pos);
@@ -210,15 +216,15 @@ function deduce(board) {
 function figurebits(board) {
 	var needed  = [];
 	var allowed = _.map(board, function(val, key) {
-		return val == null ? 511 : 0;
+		return val == null ? oneBits : 0;
 	}, []);
 
-	for (var axis = 0; axis < 3; axis++) {
-		for (var x = 0; x < 9; x++) {
+	for (var axis = 0; axis < factor; axis++) {
+		for (var x = 0; x < side; x++) {
 			var bits = axismissing(board, x, axis);
 			needed.push(bits);
 
-		    for (var y = 0; y < 9; y++) {
+		    for (var y = 0; y < side; y++) {
 		    	var pos = posfor(x, y, axis);
 		        allowed[pos] = allowed[pos] & bits;
 			}
@@ -232,30 +238,32 @@ function posfor(x, y, axis) {
 	if (axis == undefined) { axis = 0; }
 
     if (axis == 0) {
-	    return x * 9 + y;
+	    return x * side + y;
 	}
 	else if (axis == 1) {
-		return y * 9 + x;
+		return y * side + x;
 	}
 
-	return ([0,3,6,27,30,33,54,57,60][x] + [0,1,2,9,10,11,18,19,20][y])
+	var a = (x % factor) * factor + Math.floor(x / factor) * block;
+	var b = y % factor + Math.floor(y / factor) * side;
+	return (a + b)
 }
 
 function axisfor(pos, axis) {
 	if (axis == 0) {
-		return Math.floor(pos / 9);
+		return Math.floor(pos / side);
 	}
 	else if (axis == 1) {
-		return pos % 9;
+		return pos % side;
 	}
 
-	return Math.floor(pos / 27) * 3 + Math.floor(pos / 3) % 3;
+	return Math.floor(pos / block) * factor + Math.floor(pos / factor) % factor;
 }
 
 function axismissing(board, x, axis) {
 	var bits = 0;
 
-	for (var y = 0; y < 9; y++) {
+	for (var y = 0; y < side; y++) {
 		var e = board[posfor(x, y, axis)];
 
 		if (e != null) {
@@ -263,12 +271,12 @@ function axismissing(board, x, axis) {
 		}
 	}
 
-	return 511 ^ bits;
+	return oneBits ^ bits;
 }
 
 function listbits(bits) {
     var list = [];
-	for (var y = 0; y < 9; y++) {
+	for (var y = 0; y < side; y++) {
 		if ((bits & (1 << y)) != 0) {
 			list.push(y);
 		}
@@ -278,9 +286,9 @@ function listbits(bits) {
 }
 
 function allowed(board, pos) {
-	var bits = 511;
+	var bits = oneBits;
 
-	for (var axis = 0; axis < 3; axis++) {
+	for (var axis = 0; axis < factor; axis++) {
 		var x = axisfor(pos, axis);
 		bits = bits & axismissing(board, x, axis);
 	}
@@ -304,7 +312,7 @@ function pickbetter(b, c, t) {
 }
 
 function boardforentries(entries) {
-	var board = _.map(_.range(81), function(val, key) {
+	var board = _.map(_.range(space), function(val, key) {
 		return null;
 	});
 
@@ -320,7 +328,7 @@ function boardforentries(entries) {
 }
 
 function boardmatches(b1, b2) {
-	for (var i = 0; i < 81; i++) {
+	for (var i = 0; i < space; i++) {
 		if (b1[i] != b2[i]) {
 			return false;
 		}
@@ -359,8 +367,12 @@ function makeArray(length, value) {
 }
 
 module.exports = {
-	makepuzzle  : function () { return makepuzzle(solvepuzzle(makeArray(81, null))); },
+	makepuzzle  : function () { return makepuzzle(solvepuzzle(makeArray(space, null))); },
 	solvepuzzle : solvepuzzle,
 	ratepuzzle  : ratepuzzle,
-	posfor      : posfor
+	posfor      : posfor,
+	factor      : factor,
+	side        : side,
+	block       : block,
+	space       : space
 };

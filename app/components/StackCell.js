@@ -16,6 +16,10 @@ import {
   BorderWidth,
 } from './GlobalStyle';
 import Touchable from './Touchable';
+import { sudoku } from '../utils';
+
+const sudokuFactor = sudoku.factor;
+const sudokuSide = sudoku.side;
 
 const spring = {
   duration: 300,
@@ -29,10 +33,10 @@ const spring = {
   },
 };
 
-const Offset = (BoardWidth - CellSize * 9 - BorderWidth * 8) / 2;
+const Offset = (BoardWidth - CellSize * sudokuSide - BorderWidth * 8) / 2;
 
 class StackCell extends Component {
-  left = BoardWidth / 9 * this.props.number + (BoardWidth / 9 - CellSize) / 2;
+  left = BoardWidth / sudokuSide * this.props.number + (BoardWidth / sudokuSide - CellSize) / 2;
   top = this.props.index
   state = {
     hide: false,
@@ -41,11 +45,11 @@ class StackCell extends Component {
   }
 
   moveTo(index, onMoveFinish) {
-    const x = index % 9;
-    const y = (index - x) / 9;
+    const x = index % sudokuSide;
+    const y = (index - x) / sudokuSide;
     const gap = BorderWidth * 2;
-    const left = CellSize * x + gap * (Math.floor(x / 3) + 1) + Offset;
-    const top = -20 - CellSize * (9 - y) - gap * (Math.floor((8 - y) / 3) + 1);
+    const left = CellSize * x + gap * (Math.floor(x / sudokuFactor) + 1) + Offset;
+    const top = -20 - CellSize * (sudokuSide - y) - gap * (Math.floor((8 - y) / sudokuFactor) + 1);
     LayoutAnimation.configureNext(spring);
     this.setState({ left, top });
     setTimeout(() => {

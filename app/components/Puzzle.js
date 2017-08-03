@@ -13,6 +13,9 @@ import {
   BlockSize,
 } from './GlobalStyle';
 import Touchable from './Touchable';
+import { sudoku } from '../utils';
+
+const sudokuSide = sudoku.side;
 
 function formatTime(elapsed) {
   const hour = Math.floor(elapsed / 60 / 60);
@@ -47,13 +50,13 @@ class Puzzle extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: BlockSize * 9,
-    height: BlockSize * 9,
+    width: BlockSize * sudokuSide,
+    height: BlockSize * sudokuSide,
     marginHorizontal: BlockSize / 2,
   },
   board: {
-    width: BlockSize * 9,
-    height: BlockSize * 9,
+    width: BlockSize * sudokuSide,
+    height: BlockSize * sudokuSide,
     flexDirection: 'row',
     flexWrap: 'wrap',
     backgroundColor: 'lightyellow',
@@ -80,8 +83,8 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'absolute',
-    top: BlockSize * 9 / 2 - 24,
-    left: BlockSize * 9 / 2 - 24,
+    top: BlockSize * sudokuSide / 2 - 24,
+    left: BlockSize * sudokuSide / 2 - 24,
     width: 48,
     height: 48,
     borderRadius: 24,

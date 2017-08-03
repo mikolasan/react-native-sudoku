@@ -23,17 +23,23 @@ import {
   isNumber,
 } from '../utils';
 
-const stack = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const sudokuFactor = sudoku.factor;
+const sudokuSide = sudoku.side;
+const sudokuBlock = sudoku.block;
+const sudokuSpace = sudoku.space;
+
+var _ = require('lodash');
+const stack = _.range(sudokuSide);
 
 function toXY(index) {
-  const x = index % 9;
-  const y = (index - x) / 9;
+  const x = index % sudokuSide;
+  const y = (index - x) / sudokuSide;
   return { x, y };
 }
 
 function toZ(index) {
   const { x, y } = toXY(index);
-  return (x - x % 3) / 3 + (y - y % 3);
+  return (x - x % sudokuFactor) / sudokuFactor + (y - y % sudokuFactor);
 }
 
 class Board extends Component {
@@ -43,8 +49,8 @@ class Board extends Component {
   puzzle = this.props.solve || this.props.puzzle
   original = this.props.puzzle
   cells = []
-  stacks = stack.map(x => new Array(9))
-  movedStacks = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  stacks = stack.map(x => new Array(sudokuSide))
+  movedStacks = _.fill(Array(sudokuSide), 0);
   hightlightNumber = null
   hightlightIndex = null
   editing = this.props.editing
@@ -131,19 +137,19 @@ class Board extends Component {
       this.cells[index].setNumber(number);
       stack.setHide(true);
       this.puzzle[index] = number;
-      if (this.puzzle.filter((item, idx) => item != null && toZ(idx) == z).length == 9) {
+      if (this.puzzle.filter((item, idx) => item != null && toZ(idx) == z).length == sudokuSide) {
         this.animateGrid(z);
       }
-      if (this.puzzle.filter((item, idx) => item != null && toXY(idx).y == y).length == 9) {
+      if (this.puzzle.filter((item, idx) => item != null && toXY(idx).y == y).length == sudokuSide) {
         this.animateRow(y);
       }
-      if (this.puzzle.filter((item, idx) => item != null && toXY(idx).x == x).length == 9) {
+      if (this.puzzle.filter((item, idx) => item != null && toXY(idx).x == x).length == sudokuSide) {
         this.animateColumn(x);
       }
-      if (this.puzzle.filter(x => x == number).length == 9) {
+      if (this.puzzle.filter(x => x == number).length == sudokuSide) {
         this.animateNumber(number);
       }
-      if (this.puzzle.filter(x => x != null).length == 81) {
+      if (this.puzzle.filter(x => x != null).length == sudokuSpace) {
         this.solved = true;
         this.cells[index].setHighlight(false);
         this.setState({
@@ -170,14 +176,14 @@ class Board extends Component {
   initBoard() {
     this.inited = false;
     this.solved = false;
-    this.movedStacks = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.movedStacks = _.fill(Array(sudokuSide), 0);
     this.hightlightNumber = null;
     this.hightlightIndex = null;
     let count = 0;
     let fixedStack = [];
     const numberCount = this.puzzle.filter(x => x != null).length;
     const gap = 150;
-    for (let i = 0; i < 81; i++) {
+    for (let i = 0; i < sudokuSpace; i++) {
       const number = this.puzzle[i];
       if (isNumber(number)) {
         count++;
@@ -225,8 +231,8 @@ class Board extends Component {
   render() {
     const { index } = this.state;
     const { x, y } = toXY(this.state.index);
-    const top = y * CellSize + Math.floor(y / 3) * BorderWidth * 2;
-    const left = x * CellSize + Math.floor(x / 3) * BorderWidth * 2;
+    const top = y * CellSize + Math.floor(y / sudokuFactor) * BorderWidth * 2;
+    const left = x * CellSize + Math.floor(x / sudokuFactor) * BorderWidth * 2;
     return (
       <View style={styles.container} >
         <View style={styles.boardContainer} >
@@ -242,20 +248,20 @@ class Board extends Component {
   }
 
   animateRow(x) {
-    stack.forEach(i => this.cells[i + x * 9].animate());
+    stack.forEach(i => this.cells[i + x * sudokuSide].animate());
   }
 
   animateColumn(y) {
-    stack.forEach(i => this.cells[i * 9 + y].animate());
+    stack.forEach(i => this.cells[i * sudokuSide + y].animate());
   }
 
   animateGrid(z) {
-    const x = z % 3;
-    const y = (z - x) / 3;
+    const x = z % sudokuFactor;
+    const y = (z - x) / sudokuFactor;
     stack.forEach(i => {
-      const xx = i % 3;
-      const yy = (i - xx) / 3;
-      const index = xx + yy * 3 * 3 + y * 27 + x * 3;
+      const xx = i % sudokuFactor;
+      const yy = (i - xx) / sudokuFactor;
+      const index = xx + yy * sudokuFactor * sudokuFactor + y * sudokuBlock + x * sudokuFactor;
       this.cells[index].animate()
     });
   }
@@ -297,7 +303,7 @@ const styles = StyleSheet.create({
     margin: BorderWidth * 2,
     top: 0,
     left: 0,
-    width: CellSize * 9 + BorderWidth * 4,
+    width: CellSize * sudokuSide + BorderWidth * 4,
     height: CellSize,
     borderColor: 'peru',
     borderWidth: 2,
@@ -310,7 +316,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: CellSize,
-    height: CellSize * 9 + BorderWidth * 4,
+    height: CellSize * sudokuSide + BorderWidth * 4,
     borderColor: 'peru',
     borderWidth: 2,
     borderRadius: BorderWidth,

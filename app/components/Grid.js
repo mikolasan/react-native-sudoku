@@ -13,8 +13,13 @@ import {
 } from './GlobalStyle';
 
 import Cell from './Cell';
+import { sudoku } from '../utils';
 
-const stack = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const sudokuFactor = sudoku.factor;
+const sudokuSide = sudoku.side;
+
+var _ = require('lodash');
+const stack = _.range(1, sudokuSide + 1);
 
 class Grid extends Component {
   cells = []
@@ -35,9 +40,9 @@ class Grid extends Component {
             <View key={'grid' + i} style={styles.grid} >
             {
               stack.map((item, j) => {
-                const x = i % 3 * 3 + j % 3;
-                const y = Math.floor(i / 3) * 3 + Math.floor(j / 3);
-                const index = x + y * 9;
+                const x = i % sudokuFactor * sudokuFactor + j % sudokuFactor;
+                const y = Math.floor(i / sudokuFactor) * sudokuFactor + Math.floor(j / sudokuFactor);
+                const index = x + y * sudokuSide;
                 return <Cell ref={ref => this.cells[index] = ref} key={'cell' + index} 
                   index={index} number={null} onPress={this.props.onPress} />
               })
@@ -53,15 +58,15 @@ class Grid extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: CellSize * 9 + BorderWidth * 6,
+    width: CellSize * sudokuSide + BorderWidth * 6,
     flexDirection: 'row',
     flexWrap: 'wrap',
     backgroundColor: 'orange',
   },
   grid: {
     margin: BorderWidth,
-    width: CellSize * 3,
-    height: CellSize * 3,
+    width: CellSize * sudokuFactor,
+    height: CellSize * sudokuFactor,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },

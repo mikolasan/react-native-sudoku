@@ -8,11 +8,15 @@ import {
 } from 'react-native';
 
 import StackCell from './StackCell';
+import { sudoku } from '../utils';
 
-const stack = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const sudokuSide = sudoku.side;
+
+var _ = require('lodash');
+const stack = _.range(sudokuSide);
 
 class Stack extends Component {
-  stacks = stack.map(x => new Array(9))
+  stacks = stack.map(x => new Array(sudokuSide))
 
   shouldComponentUpdate(nextProps, nextState) {
     if (nextState != this.state) {
