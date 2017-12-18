@@ -11,7 +11,7 @@ export const Size = Dimensions.get('window');
 
 export const BoardWidth = Size.width;
 
-export const CellSize = Math.floor(BoardWidth / (sudoku.size + 1));
+export const CellSize = Math.floor(BoardWidth / (sudoku.side + 1));
 
 export const BorderWidth = 3;
 
