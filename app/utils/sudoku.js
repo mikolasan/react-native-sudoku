@@ -13,7 +13,14 @@ const block = side * factor;
 const space = side * side;
 const oneBits = (1 << side) - 1;
 
-function makepuzzle(board) {
+function makepuzzle() {
+	var puzzle = solvepuzzle(makeArray(space, null)); 
+	let missingPos = Math.floor(Math.random() * space);
+	puzzle[missingPos] = null;
+	return puzzle;
+}
+
+function makepuzzle_david(board) {
 	var puzzle  = [];
 	var deduced = makeArray(space, null);
 	var order   = _.range(space);
@@ -102,29 +109,29 @@ function solveboard(original) {
 }
 
 function solvenext(remembered) {
-    while (remembered.length > 0) {
-    	var tuple1 = remembered.pop();
+	while (remembered.length > 0) {
+		var tuple1 = remembered.pop();
 
-    	if (tuple1.count >= tuple1.guesses.length) {
-    		continue;
-    	}
+		if (tuple1.count >= tuple1.guesses.length) {
+			continue;
+		}
  
-    	remembered.push({guesses:tuple1.guesses, count:tuple1.count+1, board:tuple1.board});
-    	var workspace = [].concat(tuple1.board);
-    	var tuple2    = tuple1.guesses[tuple1.count];
+		remembered.push({guesses:tuple1.guesses, count:tuple1.count+1, board:tuple1.board});
+		var workspace = [].concat(tuple1.board);
+		var tuple2	= tuple1.guesses[tuple1.count];
 
-    	workspace[tuple2.pos] = tuple2.num;
+		workspace[tuple2.pos] = tuple2.num;
 
-    	var guesses = deduce(workspace);
+		var guesses = deduce(workspace);
 
-    	if (guesses == null) {
-	    	return {state:remembered, answer:workspace};
-	    }
+		if (guesses == null) {
+			return {state:remembered, answer:workspace};
+		}
 
-    	remembered.push({guesses:guesses, count:0, board:workspace});
+		remembered.push({guesses:guesses, count:0, board:workspace});
 	}
 
-    return {state:[], answer:null};
+	return {state:[], answer:null};
 }
 
 function deduce(board) {
@@ -371,6 +378,7 @@ module.exports = {
 	solvepuzzle : solvepuzzle,
 	ratepuzzle  : ratepuzzle,
 	posfor      : posfor,
+	makeArray   : makeArray,
 	factor      : factor,
 	side        : side,
 	block       : block,
