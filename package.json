@@ -7,10 +7,10 @@
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "react": "^16.0.0-alpha.12",
-    "react-native": "^0.46.4",
-    "react-native-device-info": "^0.10.2",
-    "react-native-i18n": "^2.0.2",
-    "rn-splash-screen": "^4.0.1"
+    "react": "^16.2.0",
+    "react-native": "^0.51.0",
+    "react-native-device-info": "^0.13.0",
+    "react-native-i18n": "^2.0.9",
+    "rn-splash-screen": "^5.2.0"
   }
 }
