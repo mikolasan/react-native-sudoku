@@ -42,3 +42,5 @@ android/keystores/debug.keystore
 
 android/app/sudoku-release-key.keystore
 resources/
+
+*.swp
