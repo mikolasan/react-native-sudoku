@@ -206,7 +206,7 @@ class Board extends Component {
         }, gap * count, count);
       }
     }
-  }
+ }
 
   componentWillReceiveProps(nextProps) {
     this.editing = nextProps.editing;
