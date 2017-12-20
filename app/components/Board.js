@@ -106,7 +106,7 @@ class Board extends Component {
       this.cells[index].setHintNumber(number);
       return;
     }
-    const stack = this.stacks[number][8 - this.movedStacks[number]];
+    const stack = this.stacks[number][sudokuSide - 1 - this.movedStacks[number]];
     stack.moveTo(index, () => {
       const { x, y } = toXY(index);
       const z = toZ(index);
@@ -188,7 +188,7 @@ class Board extends Component {
       if (isNumber(number)) {
         count++;
         setTimeout((count) => {
-          const stack = this.stacks[number][8 - this.movedStacks[number]];
+          const stack = this.stacks[number][sudokuSide - 1 - this.movedStacks[number]];
           fixedStack.push(stack);
           this.movedStacks[number]++;
           stack.moveTo(i, () => {
@@ -214,7 +214,7 @@ class Board extends Component {
     this.setState({ index: -1 });
     this.cells.forEach(x => x.reset());
     this.movedStacks.forEach((x, number) => {
-      for (let i = 0; i < x; i++) this.stacks[number][8 - i].reset();
+      for (let i = 0; i < x; i++) this.stacks[number][sudokuSide - 1 - i].reset();
     });
     this.puzzle = nextProps.solve || nextProps.puzzle;
     this.original = nextProps.puzzle;
