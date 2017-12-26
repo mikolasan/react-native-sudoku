@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '100',
-    fontFamily: 'Menlo',
   },
 });
 

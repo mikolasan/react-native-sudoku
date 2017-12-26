@@ -33,7 +33,7 @@ const spring = {
   },
 };
 
-const Offset = (BoardWidth - CellSize * sudokuSide - BorderWidth * (sudokuSide - 1)) / 2;
+const Offset = BorderWidth;
 
 class StackCell extends Component {
   left = BoardWidth / sudokuSide * this.props.number + (BoardWidth / sudokuSide - CellSize) / 2;
@@ -47,9 +47,10 @@ class StackCell extends Component {
   moveTo(index, onMoveFinish) {
     const x = index % sudokuSide;
     const y = (index - x) / sudokuSide;
-    const gap = BorderWidth * 2;
-    const left = CellSize * x + gap * (Math.floor(x / sudokuFactor) + 1) + Offset;
-    const top = -20 - CellSize * (sudokuSide - y) - gap * (Math.floor((sudokuSide - 1 - y) / sudokuFactor) + 1);
+    const gap = 2 * BorderWidth;
+    const left = CellSize * x + gap * Math.floor(x / sudokuFactor) + Offset;
+    // margin = 20
+    const top = -20 - CellSize * (sudokuSide - y) - gap * Math.floor((sudokuSide - 1 - y) / sudokuFactor) - Offset;
     LayoutAnimation.configureNext(spring);
     this.setState({ left, top });
     setTimeout(() => {
@@ -117,7 +118,6 @@ const styles = StyleSheet.create({
   text: {
     color: '#666',
     fontSize: CellSize * 2 / 3,
-    fontFamily: 'HelveticaNeue',
   }
 });
 

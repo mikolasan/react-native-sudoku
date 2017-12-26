@@ -7,7 +7,7 @@
 var undefined;
 var _ = require('lodash');
 
-const factor = 3;
+const factor = 4;
 const side = factor * factor;
 const block = side * factor;
 const space = side * side;

@@ -58,7 +58,6 @@ class Grid extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: CellSize * sudokuSide + BorderWidth * 6,
     flexDirection: 'row',
     flexWrap: 'wrap',
     backgroundColor: 'orange',

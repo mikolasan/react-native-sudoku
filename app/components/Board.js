@@ -182,7 +182,7 @@ class Board extends Component {
     let count = 0;
     let fixedStack = [];
     const numberCount = this.puzzle.filter(x => x != null).length;
-    const gap = 150;
+    const gap = 50;
     for (let i = 0; i < sudokuSpace; i++) {
       const number = this.puzzle[i];
       if (isNumber(number)) {
@@ -234,13 +234,11 @@ class Board extends Component {
     const top = y * CellSize + Math.floor(y / sudokuFactor) * BorderWidth * 2;
     const left = x * CellSize + Math.floor(x / sudokuFactor) * BorderWidth * 2;
     return (
-      <View style={styles.container} >
-        <View style={styles.boardContainer} >
-          <View style={styles.board} >
-            <Grid ref={ref => ref && (this.cells = ref.cells)} onPress={this.onCellPress} />
-            {index!=-1&&<View pointerEvents='none' style={[styles.row, {top}]} />}
-            {index!=-1&&<View pointerEvents='none' style={[styles.column, {left}]} />}
-          </View>
+      <View>
+        <View style={styles.board} >
+          <Grid ref={ref => ref && (this.cells = ref.cells)} onPress={this.onCellPress} />
+          {index!=-1&&<View pointerEvents='none' style={[styles.row, {top}]} />}
+          {index!=-1&&<View pointerEvents='none' style={[styles.column, {left}]} />}
         </View>
         <Stack ref={ref => ref && (this.stacks = ref.stacks)} onPress={this.onStackPress} />
       </View>
@@ -286,24 +284,20 @@ class Board extends Component {
 }
 
 const styles = StyleSheet.create({
-  boardContainer: {
-    //marginTop: 20,
+  board: {
     alignItems: 'center',
     width: BoardWidth,
-  },
-  board: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     backgroundColor: 'orange',
-    padding: BorderWidth,
   },
   row: {
     position: 'absolute',
     backgroundColor: 'transparent',
-    margin: BorderWidth * 2,
+    margin: BorderWidth,
     top: 0,
     left: 0,
-    width: CellSize * sudokuSide + BorderWidth * 4,
+    width: CellSize * sudokuSide + BorderWidth * 2,
     height: CellSize,
     borderColor: 'peru',
     borderWidth: 2,
@@ -312,11 +306,11 @@ const styles = StyleSheet.create({
   column: {
     position: 'absolute',
     backgroundColor: 'transparent',
-    margin: BorderWidth * 2,
+    margin: BorderWidth,
     top: 0,
     left: 0,
     width: CellSize,
-    height: CellSize * sudokuSide + BorderWidth * 4,
+    height: CellSize * sudokuSide + BorderWidth * 2,
     borderColor: 'peru',
     borderWidth: 2,
     borderRadius: BorderWidth,

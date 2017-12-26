@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
   text: {
     color: '#333',
     fontSize: CellSize * 2 / 3,
-    fontFamily: 'HelveticaNeue',
   },
   editingText: {
     textAlign: 'center',

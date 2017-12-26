@@ -587,9 +587,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     fontSize: CellSize,
-    fontFamily: 'Menlo',
     color: '#fff',
-    //fontFamily: 'Menlo',
   },
   footer: {
     flexDirection: 'row',
@@ -610,7 +608,6 @@ const styles = StyleSheet.create({
     marginLeft: CellSize / 2,
     color: '#fff',
     fontSize: CellSize * 3 / 4,
-    fontFamily: 'Menlo',
     width: CellSize * 5,
   },
   challenge: {
@@ -637,7 +634,6 @@ const styles = StyleSheet.create({
     marginVertical: CellSize / 6,
     textAlign: 'center',
     color: '#fff',
-    fontFamily: 'Menlo',
     fontSize: CellSize * 2 / 4,
     lineHeight: Platform.OS == 'android' ? Math.floor(CellSize * 4 / 6) : CellSize * 4 / 6,
   },

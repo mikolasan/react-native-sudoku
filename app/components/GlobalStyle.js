@@ -9,13 +9,17 @@ import { sudoku } from '../utils';
 
 export const Size = Dimensions.get('window');
 
-export const BoardWidth = Size.width;
+export const BorderWidth = 5;
+//export const ButtonSize =  Math.floor(BoardWidth / (sudoku.side + 1));
+var AllBorders = BorderWidth * sudoku.factor * 2;
 
-export const CellSize = Math.floor(BoardWidth / (sudoku.side + 1));
+export const BoardMargin = BorderWidth * 2;
+export const CellSize = Math.floor((Size.width - AllBorders - BoardMargin) / sudoku.side);
 
-export const BorderWidth = 3;
+export const BoardWidth = CellSize * sudoku.side + AllBorders;
+//export const CellSizeReplacement = 200;
 
-export const BlockSize = 15;
+export const BlockSize = 10;
 
 export const Color = {
 

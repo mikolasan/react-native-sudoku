@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontWeight: '100',
-    fontFamily: 'Menlo',
     backgroundColor: 'transparent',
   },
   button: {
